@@ -19,7 +19,6 @@ pub fn init_app() {
     flutter_rust_bridge::setup_default_user_utils();
 }
 
-
 #[flutter_rust_bridge::frb(sync)]
 pub fn take_s(path: String) {
     println!("Message: {}", path);
