@@ -37,6 +37,20 @@ pub fn take_s(path: String) {
     // "done".to_string()
 }
 
+// this function will take multiple display screenshot
+// pub fn take_s(path: String) {
+//     println!("Message: {}", path);
+
+//     let screens = Screen::all().unwrap();
+
+//     for (index, screen) in screens.iter().enumerate() {
+//         let image = screen.capture().unwrap();
+//         let screen_path = format!("{}_screen_{}.png", path, index);
+//         image.save(screen_path.clone()).unwrap();
+//         println!("Screenshot saved to {}", screen_path);
+//     }
+// }
+
 #[cfg(target_os = "windows")]
 #[flutter_rust_bridge::frb(sync)]
 pub fn get_windows_logs() -> String {
