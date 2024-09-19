@@ -11,6 +11,3 @@ String greet({required String name}) =>
 
 void takeS({required String path}) =>
     RustLib.instance.api.crateApiSimpleTakeS(path: path);
-
-String collectWindowsLogs() =>
-    RustLib.instance.api.crateApiSimpleCollectWindowsLogs();

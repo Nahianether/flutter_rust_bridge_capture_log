@@ -1753,9 +1753,6 @@ dependencies = [
  "flutter_rust_bridge",
  "flutter_rust_bridge_codegen",
  "screenshots",
- "serde",
- "serde_json",
- "winapi",
 ]
 
 [[package]]
