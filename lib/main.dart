@@ -20,7 +20,8 @@ class _MyAppState extends State<MyApp> {
     var i = 0;
     while (mounted) {
       await Future.delayed(interval);
-      takeS(path: '/Users/intishar/Pictures/screenshot$i.png');
+      // takeS(path: '/Users/intishar/Pictures/screenshot$i.png');
+      takeS(path: 'F:/screenshot$i.png');
       i++;
     }
   }
