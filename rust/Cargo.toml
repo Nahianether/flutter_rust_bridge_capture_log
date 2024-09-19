@@ -12,4 +12,4 @@ flutter_rust_bridge_codegen = "2.4.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 screenshots = "0.8.10"
-winapi = { version = "0.3", features = ["evntrace", "libloaderapi", "eventlog"] }
+winapi = { version = "0.3", features = [] }
