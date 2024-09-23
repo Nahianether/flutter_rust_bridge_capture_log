@@ -11,3 +11,9 @@ String greet({required String name}) =>
 
 void takeS({required String path}) =>
     RustLib.instance.api.crateApiSimpleTakeS(path: path);
+
+List<String> getChromeHistory({required String path}) =>
+    RustLib.instance.api.crateApiSimpleGetChromeHistory(path: path);
+
+List<String> getRunningProcesses() =>
+    RustLib.instance.api.crateApiSimpleGetRunningProcesses();

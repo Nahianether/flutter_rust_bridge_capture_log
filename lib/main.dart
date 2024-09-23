@@ -20,15 +20,15 @@ class _MyAppState extends State<MyApp> {
     var i = 0;
     while (mounted) {
       await Future.delayed(interval);
-      // takeS(path: '/Users/intishar/Pictures/screenshot$i.png');
-      takeS(path: 'F:/screenshot$i.png');
+      takeS(path: '/Users/intishar/Pictures/screenshot$i.png');
+      // takeS(path: 'F:/screenshot$i.png');
       i++;
     }
   }
 
   @override
   void initState() {
-    _captureScreenshotPeriodically();
+    // _captureScreenshotPeriodically();
     super.initState();
   }
 
@@ -46,14 +46,22 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () async {
                   takeS(path: '/Users/intishar/Pictures/screenshot.png');
                 },
-                child: const Text('ScreenShot'),
+                child: const Text('Take ScreenShot'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  // String logs = await getWindowsLogs();
-                  // debugPrint('Logs: $logs');
+                  List<String> logs = getRunningProcesses();
+                  debugPrint('Logs: $logs');
                 },
-                child: const Text('Get Windows Logs'),
+                child: const Text('Get Running Process'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  List<String> logs =
+                      getChromeHistory(path: '/Users/intishar/Library/Application Support/Google/Chrome/Default');
+                  debugPrint('Chrome Log: $logs');
+                },
+                child: const Text('Get Chrome History'),
               ),
             ],
           ),
