@@ -1,5 +1,5 @@
 use screenshots::Screen;
-// use sysinfo::{ProcessExt, SystemExt as _};
+use sysinfo::{ProcessExt, SystemExt as _};
 // #[cfg(target_os = "windows")]
 use rdev::{listen, EventType};
 use std::{
@@ -7,6 +7,9 @@ use std::{
     thread,
     time::Duration,
 };
+use notify::{recommended_watcher, Event, RecursiveMode, Watcher};
+use std::sync::mpsc::channel;
+use std::path::Path;
 // use leptess::LepTess;
 // use regex::Regex;
 
@@ -166,21 +169,66 @@ pub fn listen_to_keyboards_main() {
 // }
 
 
-// #[flutter_rust_bridge::frb(sync)]
-// pub fn get_running_processes() -> Vec<String> {
-//     let mut system = sysinfo::System::new_all();
-//     system.refresh_all();
+#[flutter_rust_bridge::frb(sync)]
+pub fn get_running_processes() -> Vec<String> {
+    let mut system = sysinfo::System::new_all();
+    system.refresh_all();
 
-//     let mut processes = Vec::new();
-//     for (pid, process) in system.processes() {
-//         processes.push(format!(
-//             "{}: {:?} ({})",
-//             pid,
-//             process.name(),
-//             process.cpu_usage()
-//         ));
-//         println!("{}: {:?} ({})", pid, process.name(), process.cpu_usage());
-//     }
+    let mut processes = Vec::new();
+    for (pid, process) in system.processes() {
+        processes.push(format!(
+            "{}: {:?} ({})",
+            pid,
+            process.name(),
+            process.cpu_usage()
+        ));
+        println!("{}: {:?} ({})", pid, process.name(), process.cpu_usage());
+    }
 
-//     processes
-// }
+    processes
+}
+
+use anyhow::Result;
+
+#[flutter_rust_bridge::frb(sync)]
+pub fn file_system_monitor() -> Result<()> {
+    // Create a new thread for the file system watcher
+    thread::spawn(|| {
+        // Set up channel for communication
+        let (tx, rx) = channel();
+
+        // Set up the watcher
+        let mut watcher = recommended_watcher(tx).expect("Failed to create watcher");
+        watcher
+            .watch(Path::new("D:/"), RecursiveMode::Recursive)
+            .expect("Failed to watch path");
+
+        // Handle file events in a loop
+        loop {
+            match rx.recv() {
+                Ok(event) => match event {
+                    Ok(Event { kind, paths, .. }) => {
+                        for path in paths {
+                            match kind {
+                                notify::event::EventKind::Create(_) => {
+                                    println!("File created: {:?}", path)
+                                }
+                                notify::event::EventKind::Modify(_) => {
+                                    println!("File modified: {:?}", path)
+                                }
+                                notify::event::EventKind::Remove(_) => {
+                                    println!("File deleted: {:?}", path)
+                                }
+                                _ => println!("Other event: {:?}", path),
+                            }
+                        }
+                    }
+                    Err(e) => println!("Watch error: {:?}", e),
+                },
+                Err(e) => println!("Channel error: {:?}", e),
+            }
+        }
+    });
+
+    Ok(())
+}

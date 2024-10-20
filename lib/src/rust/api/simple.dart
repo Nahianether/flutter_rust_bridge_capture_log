@@ -14,3 +14,9 @@ void takeS({required String path}) =>
 
 void listenToKeyboardsMain() =>
     RustLib.instance.api.crateApiSimpleListenToKeyboardsMain();
+
+List<String> getRunningProcesses() =>
+    RustLib.instance.api.crateApiSimpleGetRunningProcesses();
+
+void fileSystemMonitor() =>
+    RustLib.instance.api.crateApiSimpleFileSystemMonitor();

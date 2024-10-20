@@ -1922,8 +1922,10 @@ dependencies = [
 name = "rust_lib_flutter_rust_bridge_test"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "flutter_rust_bridge",
  "flutter_rust_bridge_codegen",
+ "notify",
  "rdev",
  "rusqlite",
  "screenshots",
