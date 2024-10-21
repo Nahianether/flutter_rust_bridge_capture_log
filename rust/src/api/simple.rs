@@ -10,6 +10,9 @@ use std::{
 use notify::{recommended_watcher, Event, RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
 use std::path::Path;
+
+use runas::Command;
+
 // use leptess::LepTess;
 // use regex::Regex;
 
@@ -231,4 +234,47 @@ pub fn file_system_monitor() -> Result<()> {
     });
 
     Ok(())
+}
+
+#[flutter_rust_bridge::frb(sync)]
+#[cfg(target_os = "windows")]
+fn run_with_elevated_privileges_windows() {
+    // let uninstaller_path = r"C:\Program Files\7-Zip\Uninstall.exe";
+    let uninstaller_path2 = r"C:\Program Files (x86)\Google\Picasa3\Uninstall.exe";
+    
+    if Path::new(uninstaller_path2).exists() {
+        let status = Command::new(uninstaller_path2)
+            .arg("/S")
+            .status()
+            .unwrap_or_else(|e| {
+                panic!("Failed to execute uninstaller: {:?}", e);
+            });
+
+        if status.success() {
+            println!("7-Zip uninstalled successfully.");
+        } else {
+            println!("Uninstallation failed! Exit code: {:?}", status.code());
+        }
+    } else {
+        println!("Uninstaller not found.");
+    }
+}
+
+#[flutter_rust_bridge::frb(sync)]
+#[cfg(any(target_os = "linux", target_os = "macos"))]
+fn run_with_elevated_privileges_mac_linux() {
+    let result = Command::new("sudo")
+        .arg("echo elevated command")
+        .status();
+
+    match result {
+        Ok(status) => {
+            if status.success() {
+                println!("Successfully executed with elevated privileges!");
+            } else {
+                println!("Execution failed!");
+            }
+        }
+        Err(e) => println!("Error: {:?}", e),
+    }
 }
